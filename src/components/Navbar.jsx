@@ -12,8 +12,8 @@ const AnimatedLink = ({ to, end, children, onClick }) => (
   <NavLink to={to} end={end} onClick={onClick} className="relative py-1 group">
     {({ isActive }) => (
       <>
-          <span>{children}</span>
-          <span className={underline(isActive)} />
+            <span>{children}</span>
+            <span className={underline(isActive)} />
   
     </>
     )}
@@ -35,22 +35,12 @@ const ContactButton = ({ onClick }) => (
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // Menú fijo: se esconde al bajar y reaparece al subir; con fondo de papel en cuanto hay scroll
-  const [hidden, setHidden] = useState(false);
+  // Menú siempre visible: arriba del todo, normal; en cuanto hay scroll, tira fina de acrílico
   const [scrolled, setScrolled] = useState(false);
-  const lastY = useRef(0);
 
   useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 8);
-      const delta = y - lastY.current;
-      // Margen de 10 px antes de decidir la dirección: evita parpadeos con scrolls mínimos
-      if (Math.abs(delta) < 10 && y > 120) return;
-      if (y > 120 && delta > 0) setHidden(true);
-      else setHidden(false);
-      lastY.current = y;
-    };
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
@@ -94,48 +84,48 @@ const Navbar = () => {
 
   return (
     <>
-    {/* Hueco con la altura original del menú: como el menú es fijo, puede encogerse al hacer
-        scroll sin mover la página (si la moviera, el scroll entraría en bucle y temblaría) */}
-    <div aria-hidden="true" className="h-[104px] md:h-[112px]" />
-    <nav
-      ref={menuRef}
-      className={`page fixed top-0 inset-x-0 z-50 flex items-center justify-between transition-[height,transform,background,box-shadow] duration-300 ${
-        hidden && !isOpen ? '-translate-y-full' : ''
-      } ${scrolled ? 'h-12 nav-glass' : 'h-[104px] md:h-[112px]'}`}
-    >
-      <Link
-        to="/"
-        onClick={goHome}
-        aria-label="Inicio"
-        className="-rotate-6 hover:rotate-6 transition-transform duration-500"
+      {/* Hueco con la altura original del menú: como el menú es fijo, puede encogerse al hacer
+          scroll sin mover la página (si la moviera, el scroll entraría en bucle y temblaría) */}
+      <div aria-hidden="true" className="h-[104px] md:h-[112px]" />
+      <nav
+        ref={menuRef}
+        className={`page fixed top-0 inset-x-0 z-50 flex items-center justify-between transition-[height,background,box-shadow] duration-300 ${
+          scrolled ? 'h-12 nav-glass' : 'h-[104px] md:h-[112px]'
+        }`}
       >
-        <AnimatedDrawing className={`h-auto transition-[width] duration-300 ${scrolled ? 'w-8' : 'w-14 md:w-16'}`} />
-      </Link>
-
-      <button
-        type="button"
-        onClick={() => setIsOpen((v) => !v)}
-        aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
-        aria-expanded={isOpen}
-        aria-controls="menu-movil"
-        className="md:hidden p-2 -mr-2"
-      >
-        <svg className={`transition-[width,height] duration-300 ${scrolled ? 'w-6 h-6' : 'w-7 h-7'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-          {isOpen ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h10" />}
-        </svg>
-      </button>
-
-      <div className={`hidden md:flex items-center gap-10 font-medium tracking-wide transition-[font-size] duration-300 ${scrolled ? 'text-sm' : 'text-base'}`}>{links}</div>
-
-      {isOpen && (
-        <div
-          id="menu-movil"
-          className="absolute top-full inset-x-4 bg-card rounded-sm shadow-xl border border-line flex flex-col items-center gap-6 py-8 text-lg font-medium md:hidden animate-fade-in"
+        <Link
+          to="/"
+          onClick={goHome}
+          aria-label="Inicio"
+          className="-rotate-6 hover:rotate-6 transition-transform duration-500"
         >
-          {links}
-        </div>
-      )}
-    </nav>
+          <AnimatedDrawing className={`h-auto transition-[width] duration-300 ${scrolled ? 'w-8' : 'w-14 md:w-16'}`} />
+        </Link>
+
+        <button
+          type="button"
+          onClick={() => setIsOpen((v) => !v)}
+          aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
+          aria-expanded={isOpen}
+          aria-controls="menu-movil"
+          className="md:hidden p-2 -mr-2"
+        >
+          <svg className={`transition-[width,height] duration-300 ${scrolled ? 'w-6 h-6' : 'w-7 h-7'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+            {isOpen ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h10" />}
+          </svg>
+        </button>
+
+        <div className={`hidden md:flex items-center gap-10 font-medium tracking-wide transition-[font-size] duration-300 ${scrolled ? 'text-sm' : 'text-base'}`}>{links}</div>
+
+        {isOpen && (
+          <div
+            id="menu-movil"
+            className="absolute top-full inset-x-4 bg-card rounded-sm shadow-xl border border-line flex flex-col items-center gap-6 py-8 text-lg font-medium md:hidden animate-fade-in"
+          >
+            {links}
+          </div>
+        )}
+      </nav>
     </>
   );
 };
