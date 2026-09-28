@@ -12,9 +12,10 @@ const AnimatedLink = ({ to, end, children, onClick }) => (
   <NavLink to={to} end={end} onClick={onClick} className="relative py-1 group">
     {({ isActive }) => (
       <>
-        <span>{children}</span>
-        <span className={underline(isActive)} />
-      </>
+          <span>{children}</span>
+          <span className={underline(isActive)} />
+  
+    </>
     )}
   </NavLink>
 );
@@ -92,12 +93,15 @@ const Navbar = () => {
   );
 
   return (
+    <>
+    {/* Hueco con la altura original del menú: como el menú es fijo, puede encogerse al hacer
+        scroll sin mover la página (si la moviera, el scroll entraría en bucle y temblaría) */}
+    <div aria-hidden="true" className="h-[104px] md:h-[112px]" />
     <nav
       ref={menuRef}
-      // Altura siempre igual: si cambiara, movería la página y el scroll entraría en bucle (temblor)
-      className={`page sticky top-0 z-50 flex items-center justify-between py-5 transition-[transform,background,box-shadow] duration-300 ${
+      className={`page fixed top-0 inset-x-0 z-50 flex items-center justify-between transition-[height,transform,background,box-shadow] duration-300 ${
         hidden && !isOpen ? '-translate-y-full' : ''
-      } ${scrolled ? 'nav-glass' : ''}`}
+      } ${scrolled ? 'h-12 nav-glass' : 'h-[104px] md:h-[112px]'}`}
     >
       <Link
         to="/"
@@ -105,7 +109,7 @@ const Navbar = () => {
         aria-label="Inicio"
         className="-rotate-6 hover:rotate-6 transition-transform duration-500"
       >
-        <AnimatedDrawing className="w-14 h-auto md:w-16" />
+        <AnimatedDrawing className={`h-auto transition-[width] duration-300 ${scrolled ? 'w-8' : 'w-14 md:w-16'}`} />
       </Link>
 
       <button
@@ -116,12 +120,12 @@ const Navbar = () => {
         aria-controls="menu-movil"
         className="md:hidden p-2 -mr-2"
       >
-        <svg className="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
+        <svg className={`transition-[width,height] duration-300 ${scrolled ? 'w-6 h-6' : 'w-7 h-7'}`} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
           {isOpen ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h10" />}
         </svg>
       </button>
 
-      <div className="hidden md:flex items-center gap-10 text-base font-medium tracking-wide">{links}</div>
+      <div className={`hidden md:flex items-center gap-10 font-medium tracking-wide transition-[font-size] duration-300 ${scrolled ? 'text-sm' : 'text-base'}`}>{links}</div>
 
       {isOpen && (
         <div
@@ -132,6 +136,7 @@ const Navbar = () => {
         </div>
       )}
     </nav>
+    </>
   );
 };
 
