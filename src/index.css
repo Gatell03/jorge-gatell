@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+@theme {
+  /* Dos familias: Fraunces (titulares, serif cálida con carácter) + Instrument Sans (todo lo demás) */
+  --font-sans: 'Instrument Sans', system-ui, sans-serif;
+  --font-serif: 'Fraunces', Georgia, serif;
+
+  /* Paleta cálida: tinta sobre papel + el amarillo de la estrella */
+  --color-paper: #fcfaf5;
+  --color-card: #fffdf8;
+  --color-ink: #1f1b16;
+  --color-ink-soft: #4a4238;
+  --color-line: rgb(31 27 22 / 0.2);
+  --color-accent: #f5ce0a;
+  --color-accent-soft: #fbe78a;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Barra de scroll oculta a propósito */
+html, body, #root, * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+*::-webkit-scrollbar { display: none; }
+
+/* Textura de papel como fondo (ya mezclada en el WebP, ver tools/optimize_assets.py):
+   queda detrás del contenido, así imágenes y formularios se ven limpios */
+body {
+  margin: 0;
+  background: #bbb29f url('/paper.webp') center top / 100% auto repeat-y;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Contenedor de página: ancho completo con márgenes laterales fluidos */
+.page {
+  width: 100%;
+  padding-inline: clamp(1.5rem, 8vw, 8rem);
+}
+
+h1, h2, h3, h4, .font-serif {
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 50;
+}
+
+@layer components {
+/* Recorte fotográfico: papel mate, sombra en dos capas y esquina levantada */
+.photo-print {
+  position: relative;
+  background: var(--color-card);
+  box-shadow:
+    0 1px 2px rgb(31 27 22 / 0.18),
+    0 10px 24px -8px rgb(31 27 22 / 0.28);
+}
+.photo-print::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, transparent 50%, rgb(31 27 22 / 0.06) 50%, rgb(255 255 255 / 0.5) 100%);
+  pointer-events: none;
+}
+.tape {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  width: 118px;
+  height: auto;
+  filter: drop-shadow(0 1px 1px rgb(31 27 22 / 0.18));
+  pointer-events: none;
+}
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-ink);
+}
+
+
+/* En la capa base para que utilidades como outline-none (p. ej. los juegos) puedan anularlo */
+@layer base {
+  :focus-visible {
+    outline: 2px dashed var(--color-ink);
+    outline-offset: 4px;
+  }
+}
+
+/* Subrayado dibujado a mano, reutilizable */
+@utility hand-underline {
+  background: linear-gradient(transparent 62%, var(--color-accent-soft) 62%, var(--color-accent-soft) 90%, transparent 90%);
+}
+
+/* Carta de contacto: se despliega como un papel doblado y la cinta cae encima */
+@keyframes letter-unfold {
+  0% { opacity: 0; transform: perspective(1400px) rotateX(-85deg) translateY(-30px) scale(0.92); }
+  55% { opacity: 1; transform: perspective(1400px) rotateX(10deg) translateY(0) scale(1.01); }
+  78% { transform: perspective(1400px) rotateX(-3deg); }
+  100% { opacity: 1; transform: perspective(1400px) rotateX(0) rotate(-0.4deg); }
+}
+@keyframes tape-slap {
+  0% { opacity: 0; transform: scale(1.7) rotate(-14deg); }
+  70% { opacity: 1; transform: scale(0.96) rotate(var(--tape-rot, -3deg)); }
+  100% { opacity: 1; transform: scale(1) rotate(var(--tape-rot, -3deg)); }
+}
+@keyframes line-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes plane-fly {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+  60% { opacity: 1; }
+  100% { transform: translate(340px, -220px) rotate(-18deg) scale(0.6); opacity: 0; }
+}
+.animate-letter { transform-origin: top center; animation: letter-unfold 0.9s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.animate-tape { animation: tape-slap 0.45s cubic-bezier(0.3, 1.4, 0.5, 1) 0.7s both; }
+.animate-line { animation: line-in 0.5s ease-out both; }
+/* Cierre: la cinta se despega y la carta se pliega hacia arriba (lo inverso de la apertura) */
+@keyframes letter-fold {
+  0% { opacity: 1; transform: perspective(1400px) rotateX(0) rotate(-0.4deg); }
+  25% { opacity: 1; transform: perspective(1400px) rotateX(9deg) translateY(4px) rotate(-0.4deg); }
+  100% { opacity: 0; transform: perspective(1400px) rotateX(-88deg) translateY(-30px) scale(0.92); }
+}
+@keyframes tape-peel {
+  from { opacity: 1; transform: scale(1) rotate(var(--tape-rot, -3deg)); }
+  to { opacity: 0; transform: translateY(-22px) scale(1.3) rotate(calc(var(--tape-rot, -3deg) * 1.7)); }
+}
+.animate-letter-out { transform-origin: top center; animation: letter-fold 0.7s cubic-bezier(0.45, 0, 0.55, 1) 0.2s both; }
+.animate-tape-out { animation: tape-peel 0.3s ease-in both; }
+
+/* Carta montada pero en pausa: ocupa su sitio, invisible en el primer fotograma, hasta que toca desplegarla */
+.letter-paused,
+.letter-paused * {
+  animation-play-state: paused !important;
+}
+.animate-plane { animation: plane-fly 1.4s cubic-bezier(0.5, 0, 0.7, 0.4) 0.2s both; }
+
+/* Transición entre páginas: sin fill "forwards" para no dejar un transform que rompa los position: fixed */
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-page { animation: page-in 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-fade-in { animation: fade-in 0.4s ease-out both; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
