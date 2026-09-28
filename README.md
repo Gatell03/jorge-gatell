@@ -2,6 +2,10 @@
 
 Mi web personal: quién soy, mis proyectos, mi trayectoria y un par de juegos. Es mi rincón para probar cosas.
 
+**En vivo: [jorge-gatell.vercel.app](https://jorge-gatell.vercel.app)**
+
+Hecha con React 19, Vite, Tailwind CSS 4, Framer Motion y Three.js.
+
 Estética de **papel y tinta**: textura de papel arrugado, recortes pegados con cinta, una estrella dibujada a mano y el amarillo como único color de acento. Tipografías: **Fraunces** (titulares) e **Instrument Sans** (texto).
 
 ## Arrancar en local
@@ -47,13 +51,9 @@ python tools/make_portrait.py   # retrato de "Sobre mí"
 
 ## Publicar
 
-La web está preparada para **Vercel**: `vercel.json` hace que recargar rutas como `/about` o `/play/derrapes` no dé 404.
+La web está publicada en **Vercel**, conectada a este repositorio: cada `git push` a `main` publica la nueva versión automáticamente. `vercel.json` hace que recargar rutas como `/about` o `/play/derrapes` no dé 404.
 
-1. Sube el repositorio a GitHub.
-2. En vercel.com, *Add New → Project* e importa el repositorio (Vercel detecta Vite solo).
-3. A partir de ahí, cada `git push` publica la nueva versión automáticamente.
-
-Si la dirección final no es `https://jorge-gatell.vercel.app`, actualízala en `index.html` (og:url, og:image, canonical y datos de persona), `public/robots.txt` y `public/sitemap.xml`.
+Si algún día cambia la dirección (por ejemplo, con un dominio propio), actualízala en `index.html` (og:url, og:image, canonical y datos de persona), `public/robots.txt` y `public/sitemap.xml`.
 
 ## Contacto
 

@@ -35,8 +35,13 @@ const ContactButton = ({ onClick }) => (
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  // Menú siempre visible: arriba del todo, normal; en cuanto hay scroll, tira fina de acrílico
-  const [scrolled, setScrolled] = useState(false);
+  // En inicio el menú es fijo: arriba del todo, normal; en cuanto hay scroll, tira fina de acrílico.
+  // En el resto de páginas (cortas) se queda arriba y se va con la página al bajar.
+  const [isScrolled, setScrolled] = useState(false);
+  const menuRef = useRef(null);
+  const { pathname } = useLocation();
+  const sticky = pathname === '/';
+  const scrolled = sticky && isScrolled;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -44,8 +49,6 @@ const Navbar = () => {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
-  const menuRef = useRef(null);
-  const { pathname } = useLocation();
 
   // Cerrar el menú móvil con Escape o tocando fuera
   useEffect(() => {
@@ -89,7 +92,7 @@ const Navbar = () => {
       <div aria-hidden="true" className="h-[104px] md:h-[112px]" />
       <nav
         ref={menuRef}
-        className={`page fixed top-0 inset-x-0 z-50 flex items-center justify-between transition-[height,background,box-shadow] duration-300 ${
+        className={`page ${sticky ? 'fixed' : 'absolute'} top-0 inset-x-0 z-50 flex items-center justify-between transition-[height,background,box-shadow] duration-300 ${
           scrolled ? 'h-12 nav-glass' : 'h-[104px] md:h-[112px]'
         }`}
       >
