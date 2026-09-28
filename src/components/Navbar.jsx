@@ -43,8 +43,11 @@ const Navbar = () => {
     const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 8);
-      if (y > 120 && y > lastY.current + 4) setHidden(true);
-      else if (y < lastY.current - 4 || y <= 120) setHidden(false);
+      const delta = y - lastY.current;
+      // Margen de 10 px antes de decidir la dirección: evita parpadeos con scrolls mínimos
+      if (Math.abs(delta) < 10 && y > 120) return;
+      if (y > 120 && delta > 0) setHidden(true);
+      else setHidden(false);
       lastY.current = y;
     };
     window.addEventListener('scroll', onScroll, { passive: true });
@@ -91,9 +94,10 @@ const Navbar = () => {
   return (
     <nav
       ref={menuRef}
-      className={`page sticky top-0 z-50 flex items-center justify-between transition-[transform,padding,background-color,box-shadow] duration-300 ${
+      // Altura siempre igual: si cambiara, movería la página y el scroll entraría en bucle (temblor)
+      className={`page sticky top-0 z-50 flex items-center justify-between py-5 transition-[transform,background,box-shadow] duration-300 ${
         hidden && !isOpen ? '-translate-y-full' : ''
-      } ${scrolled ? 'py-3 bg-paper/85 backdrop-blur-sm shadow-[0_1px_0_rgb(31_27_22/0.12)]' : 'py-6'}`}
+      } ${scrolled ? 'nav-glass' : ''}`}
     >
       <Link
         to="/"

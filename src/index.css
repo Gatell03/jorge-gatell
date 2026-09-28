@@ -66,6 +66,17 @@ h1, h2, h3, h4, .font-serif {
   background: linear-gradient(135deg, transparent 50%, rgb(31 27 22 / 0.06) 50%, rgb(255 255 255 / 0.5) 100%);
   pointer-events: none;
 }
+/* Menú al hacer scroll: acrílico translúcido (se ve el papel desenfocado a través) */
+.nav-glass {
+  background: linear-gradient(180deg, rgb(255 253 247 / 0.32), rgb(255 253 247 / 0.14));
+  -webkit-backdrop-filter: blur(18px) saturate(1.35);
+  backdrop-filter: blur(18px) saturate(1.35);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.55),
+    inset 0 -1px 0 rgb(255 255 255 / 0.25),
+    0 1px 0 rgb(31 27 22 / 0.08),
+    0 12px 32px -20px rgb(31 27 22 / 0.45);
+}
 .tape {
   position: absolute;
   top: -14px;
