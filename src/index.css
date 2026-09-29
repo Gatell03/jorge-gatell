@@ -212,6 +212,14 @@ h1, h2, h3, h4, .font-serif {
 .stamp { opacity: 0; }
 .is-in .stamp { animation: stamp 0.45s cubic-bezier(0.3, 1.3, 0.5, 1) calc(var(--reveal-delay, 0s) + 0.8s) both; }
 
+/* Flecha que empuja un par de veces hacia la derecha cuando su bloque aparece */
+@keyframes nudge {
+  0%, 100% { transform: none; }
+  50% { transform: translateX(6px); }
+}
+.grow-arrow { display: inline-block; }
+.is-in .grow-arrow { animation: nudge 0.9s ease-in-out calc(var(--reveal-delay, 0s) + 0.9s) 2; }
+
 /* Transición entre páginas: sin fill "forwards" para no dejar un transform que rompa los position: fixed */
 @keyframes page-in {
   from { opacity: 0; transform: translateY(10px); }
