@@ -28,12 +28,14 @@ npm run lint      # revisar el código
 src/
   pages/        Home, Sobre mí, fichas de proyecto, selector de juegos, 404
   components/   Navbar, Footer (con la carta de contacto), tarjetas de papel, etc.
-  data/         projects.js: proyectos, trayectoria, "Ahora mismo" y "Lo que estoy aprendiendo"
+  data/         pages.js: título y descripción de cada página para buscadores
+                projects.js: proyectos, trayectoria, "Ahora mismo" y "Lo que estoy aprendiendo"
   games/
     f18/        El vuelo del F-18 (canvas 2D)
     drift/      Derrapes sobre papel (Three.js, se carga solo al abrir el juego)
     shared/     sonido sintetizado, récords y marco común
-public/         imágenes ya optimizadas (WebP), og.png, robots.txt, sitemap.xml
+public/         imágenes ya optimizadas (WebP), og.png, iconos y robots.txt
+seo-pages.js    genera al compilar un HTML por página (título, descripción, canonical), 404.html y sitemap.xml
 assets-src/     originales de los que salen las imágenes (foto del papel, retrato)
 tools/          scripts de Python que generan las imágenes de public/
 ```

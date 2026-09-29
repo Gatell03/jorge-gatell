@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import BackToTop from './components/BackToTop';
 import ScrollToTop from './components/ScrollToTop';
+import PageMeta from './components/PageMeta';
 import Home from './pages/Home';
 import About from './pages/About';
 import ProjectDetail from './pages/ProjectDetail';
@@ -32,6 +33,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      <PageMeta />
       <div className="relative isolate min-h-screen text-ink font-sans flex flex-col overflow-x-clip">
         <Navbar />
         <BackToTop />
