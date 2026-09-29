@@ -47,10 +47,10 @@ const Home = () => {
       <header className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-14 lg:gap-24 items-center">
         <div>
           <p className="text-sm uppercase tracking-[0.18em] text-ink-soft mb-6">Ingeniería Informática · Zaragoza</p>
-          <h1 className="text-6xl md:text-8xl xl:text-9xl font-serif font-light tracking-tight leading-[0.95]">
+          <h1 className="text-5xl md:text-8xl xl:text-9xl font-serif font-light tracking-tight leading-[0.95]">
             Hola, soy Jorge.
           </h1>
-          <p className="mt-10 text-2xl md:text-[2.1rem] font-serif font-light leading-snug text-ink-soft max-w-3xl">
+          <p className="mt-8 md:mt-10 text-xl md:text-[2.1rem] font-serif font-light leading-relaxed md:leading-snug text-ink-soft max-w-3xl">
             Estudio Ingeniería Informática y me apasiona la optimización de sistemas y aprender algo nuevo cada día. Me
             guía una filosofía: <span className="whitespace-nowrap"><Experience />.</span>
           </p>
@@ -71,9 +71,9 @@ const Home = () => {
           {experience.map((item) => (
             <li
               key={item.role}
-              className="grid md:grid-cols-[1.3fr_1fr_12rem] gap-1 md:gap-10 md:items-baseline py-7 border-b border-line"
+              className="grid md:grid-cols-[1.3fr_1fr_12rem] gap-1 md:gap-10 md:items-baseline py-6 md:py-7 border-b border-line"
             >
-              <span className="text-2xl md:text-3xl font-serif font-light leading-snug">{item.role}</span>
+              <span className="text-xl md:text-3xl font-serif font-light leading-snug">{item.role}</span>
               <span className="text-ink-soft md:text-lg">{item.company}</span>
               <span className="text-sm text-ink-soft md:text-right flex items-center gap-2 md:justify-end whitespace-nowrap tabular-nums">
                 {isCurrent(item.date) && <span className="w-2 h-2 rounded-full bg-accent ring-1 ring-ink/40" aria-hidden="true" />}

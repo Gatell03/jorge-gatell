@@ -17,7 +17,7 @@ const PrimaryButton = ({ children, onClick }) => (
     onClick={onClick}
     className="group relative mt-3 inline-flex items-center gap-2 px-8 py-3 font-medium"
   >
-    <span className="absolute -inset-x-2 -inset-y-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity">
+    <span className="absolute -inset-x-2 -inset-y-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity">
       <img src="/contact.webp" alt="" className="w-full h-full object-fill" />
     </span>
     <span className="relative">{children}</span>
@@ -121,7 +121,7 @@ const Stage = ({ full }) => {
       onPointerDown={onPointerDown}
       onKeyDown={onKeyDown}
       className={`relative w-full overflow-hidden border-2 border-ink shadow-xl cursor-pointer select-none touch-none outline-none ${
-        full ? 'h-screen max-w-none border-0' : 'h-[min(72vh,620px)] min-h-[420px]'
+        full ? 'h-dvh max-w-none border-0' : 'h-[min(72vh,620px)] min-h-[420px]'
       }`}
     >
       <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" />

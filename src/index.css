@@ -151,6 +151,39 @@ h1, h2, h3, h4, .font-serif {
 }
 .animate-plane { animation: plane-fly 1.4s cubic-bezier(0.5, 0, 0.7, 0.4) 0.2s both; }
 
+/* Menú móvil: pósit amarillo que cae, rebota y se queda pegado; al cerrar se despega */
+.postit {
+  background: linear-gradient(180deg, #fdeea0, #fbe78a 40%, #f7df74);
+  box-shadow:
+    0 1px 2px rgb(31 27 22 / 0.2),
+    0 18px 30px -14px rgb(31 27 22 / 0.45);
+  transform-origin: 50% 0;
+  rotate: 2deg;
+}
+.postit::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 34px;
+  height: 34px;
+  background: linear-gradient(135deg, transparent 50%, rgb(31 27 22 / 0.08) 50%, rgb(255 255 255 / 0.45) 100%);
+  pointer-events: none;
+}
+@keyframes postit-in {
+  0% { opacity: 0; transform: translate(40px, -60px) rotate(-18deg) scale(1.12); }
+  55% { opacity: 1; transform: translate(0, 4px) rotate(3deg) scale(0.97); }
+  78% { transform: translate(0, -1px) rotate(-1deg) scale(1.01); }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes postit-out {
+  0% { opacity: 1; transform: none; }
+  30% { opacity: 1; transform: translate(0, 3px) rotate(-2deg); }
+  100% { opacity: 0; transform: translate(60px, -40px) rotate(16deg) scale(0.9); }
+}
+.animate-postit { animation: postit-in 0.55s cubic-bezier(0.25, 0.9, 0.3, 1) both; }
+.animate-postit-out { animation: postit-out 0.38s cubic-bezier(0.5, 0, 0.75, 0) both; }
+
 /* Transición entre páginas: sin fill "forwards" para no dejar un transform que rompa los position: fixed */
 @keyframes page-in {
   from { opacity: 0; transform: translateY(10px); }

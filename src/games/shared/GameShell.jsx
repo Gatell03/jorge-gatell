@@ -22,18 +22,45 @@ const GameShell = ({ title, subtitle, children }) => {
   usePageTitle(title);
   const stageRef = useRef(null);
   const [muted, setMutedState] = useState(isMuted);
-  const [full, setFull] = useState(false);
+  const [nativeFull, setNativeFull] = useState(false);
+  // iPhone (Safari) no deja poner en pantalla completa nada que no sea un vídeo:
+  // allí el juego ocupa toda la ventana desde la propia web
+  const [fakeFull, setFakeFull] = useState(false);
+  const full = nativeFull || fakeFull;
 
   useEffect(() => onMuteChange(setMutedState), []);
   useEffect(() => {
-    const onChange = () => setFull(document.fullscreenElement === stageRef.current);
+    const onChange = () =>
+      setNativeFull((document.fullscreenElement ?? document.webkitFullscreenElement) === stageRef.current);
     document.addEventListener('fullscreenchange', onChange);
-    return () => document.removeEventListener('fullscreenchange', onChange);
+    document.addEventListener('webkitfullscreenchange', onChange);
+    return () => {
+      document.removeEventListener('fullscreenchange', onChange);
+      document.removeEventListener('webkitfullscreenchange', onChange);
+    };
   }, []);
 
+  // Pantalla completa simulada: sin scroll de la página por debajo y Escape para salir
+  useEffect(() => {
+    if (!fakeFull) return;
+    const { overflow } = document.body.style;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e) => e.key === 'Escape' && setFakeFull(false);
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = overflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [fakeFull]);
+
   const toggleFull = () => {
-    if (document.fullscreenElement) document.exitFullscreen();
-    else stageRef.current?.requestFullscreen?.();
+    if (fakeFull) return setFakeFull(false);
+    if (document.fullscreenElement) return document.exitFullscreen();
+    if (document.webkitFullscreenElement) return document.webkitExitFullscreen();
+    const stage = stageRef.current;
+    const request = stage?.requestFullscreen ?? stage?.webkitRequestFullscreen;
+    if (!request) return setFakeFull(true);
+    Promise.resolve(request.call(stage)).catch(() => setFakeFull(true));
   };
 
   return (
@@ -41,7 +68,7 @@ const GameShell = ({ title, subtitle, children }) => {
       <header className="flex flex-wrap items-end justify-between gap-6 border-b border-ink pb-6">
         <div className="flex flex-col gap-3">
           <Link to="/play" className="text-sm text-ink-soft hover:text-ink transition-colors">← Juegos</Link>
-          <h1 className="text-5xl md:text-7xl font-serif font-light tracking-tight leading-none">{title}</h1>
+          <h1 className="text-4xl md:text-7xl font-serif font-light tracking-tight leading-none">{title}</h1>
           <p className="text-ink-soft">{subtitle}</p>
         </div>
         <div className="flex gap-2">
@@ -54,8 +81,26 @@ const GameShell = ({ title, subtitle, children }) => {
           </IconButton>
         </div>
       </header>
-      <div ref={stageRef} className={`relative w-full ${full ? 'bg-paper flex items-center justify-center' : ''}`}>
+      <div
+        ref={stageRef}
+        className={`w-full ${full ? 'bg-paper flex items-center justify-center' : 'relative'} ${
+          fakeFull ? 'fixed inset-0 z-[200] h-dvh' : ''
+        }`}
+      >
         {typeof children === 'function' ? children({ full }) : children}
+        {fakeFull && (
+          <button
+            type="button"
+            onClick={() => setFakeFull(false)}
+            aria-label="Salir de pantalla completa"
+            className="absolute left-1/2 -translate-x-1/2 z-30 p-2 rounded-full bg-card/85 border border-ink/30 shadow-md"
+            style={{ bottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" aria-hidden="true">
+              <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" />
+            </svg>
+          </button>
+        )}
       </div>
     </div>
   );

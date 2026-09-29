@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useForm, ValidationError } from '@formspree/react';
 import { OPEN_CONTACT_EVENT } from './contact';
+import { useLiveOnScroll } from './useLiveOnScroll';
 
 const EMAIL = 'jorgegatell3@gmail.com';
 const labelClass = 'text-xs uppercase tracking-[0.14em] text-ink-soft font-medium';
@@ -14,12 +15,12 @@ const RULED = {
 
 // Campo en línea dentro de una frase ("Me llamo ____")
 const InlineInput = ({ id, errors, className = '', ...props }) => (
-  <span className="inline-flex flex-col align-baseline">
+  <span className="inline-flex flex-col align-baseline max-w-full">
     <input
       id={id}
       name={id}
       required
-      className={`bg-transparent border-b-[1.5px] border-dashed border-ink/40 focus:border-solid focus:border-ink outline-none px-1 font-serif italic text-ink placeholder:text-ink-soft/50 transition-colors ${className}`}
+      className={`bg-transparent border-b-[1.5px] border-dashed border-ink/40 focus:border-solid focus:border-ink outline-none px-1 max-w-full font-serif italic text-ink placeholder:text-ink-soft/50 transition-colors ${className}`}
       {...props}
     />
     <ValidationError field={id} errors={errors} className="text-sm not-italic text-red-700" />
@@ -33,7 +34,7 @@ const ScribbleButton = ({ children, ...props }) => (
     className="group relative inline-flex items-center gap-2 px-8 py-3.5 font-medium text-ink disabled:opacity-60 focus-visible:outline-none"
   >
     {/* Igual que "contacto": el rotulador solo aparece al pasar el ratón */}
-    <span className="absolute -inset-x-2 -inset-y-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-300">
+    <span className="absolute -inset-x-2 -inset-y-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity duration-300">
       <img src="/contact.webp" alt="" className="w-full h-full object-fill" />
     </span>
     <span className="relative">{children}</span>
@@ -53,7 +54,7 @@ const LetterTape = ({ side, closing }) => (
     src="/tape.webp"
     alt=""
     aria-hidden="true"
-    className={`${closing ? 'animate-tape-out' : 'animate-tape'} absolute -top-4 w-28 pointer-events-none drop-shadow-sm ${side === 'left' ? '-left-6' : '-right-6'}`}
+    className={`${closing ? 'animate-tape-out' : 'animate-tape'} absolute -top-4 w-20 md:w-28 pointer-events-none drop-shadow-sm ${side === 'left' ? '-left-3 md:-left-6' : '-right-3 md:-right-6'}`}
     style={{ '--tape-rot': side === 'left' ? '-32deg' : '28deg' }}
   />
 );
@@ -64,7 +65,7 @@ const ContactForm = ({ onClose, closing }) => {
   const line = (i) => ({ animationDelay: `${0.45 + i * 0.08}s` });
 
   return (
-    <div className={`${closing ? 'animate-letter-out' : 'animate-letter'} photo-print bg-[#f1ebdd] max-w-3xl px-6 py-10 md:px-14 md:py-14`}>
+    <div className={`${closing ? 'animate-letter-out' : 'animate-letter'} photo-print bg-[#f1ebdd] max-w-3xl px-5 py-9 md:px-14 md:py-14`}>
       <LetterTape side="left" closing={closing} />
       <LetterTape side="right" closing={closing} />
 
@@ -80,10 +81,10 @@ const ContactForm = ({ onClose, closing }) => {
           </button>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-7 font-serif text-xl md:text-2xl font-light leading-relaxed">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6 md:gap-7 font-serif text-lg md:text-2xl font-light leading-relaxed">
           {/* Campo trampa de Formspree: invisible para personas, los bots lo rellenan y se descartan */}
           <input type="text" name="_gotcha" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] w-px h-px opacity-0" />
-          <div className="animate-line flex justify-between gap-4 font-sans" style={line(0)}>
+          <div className="animate-line flex flex-wrap justify-between gap-x-4 gap-y-1 font-sans" style={line(0)}>
             <span className={labelClass}>Para: Jorge Gatell</span>
             <span className={labelClass}>Zaragoza, {today}</span>
           </div>
@@ -109,7 +110,7 @@ const ContactForm = ({ onClose, closing }) => {
               required
               rows="4"
               placeholder="Cuéntame lo que quieras. ¿Un software que cure el hipo? ¿Un algoritmo que encuentre calcetines desparejados? ¿O me invitas a una tortilla de patatas? Soy todo oídos (y código)."
-              className="bg-transparent outline-none resize-none text-lg md:text-xl placeholder:text-ink-soft/50"
+              className="bg-transparent outline-none resize-none text-base md:text-xl placeholder:text-ink-soft/50"
               style={RULED}
             />
             <ValidationError field="message" errors={state.errors} className="text-sm text-red-700" />
@@ -197,6 +198,7 @@ const Footer = () => {
   const rowRef = useRef(null);
   const letterRef = useRef(null);
   const showForm = phase !== 'closed';
+  const emailRef = useLiveOnScroll('0px 0px -20% 0px');
 
   useEffect(() => {
     phaseRef.current = phase;
@@ -267,19 +269,19 @@ const Footer = () => {
   };
 
   return (
-    <footer id="contacto" className="w-full pt-20 md:pt-24 flex flex-col gap-10 md:gap-14 border-t border-line mt-24 md:mt-32 scroll-mt-4">
-      <h2 className="text-[4.5rem] md:text-[8rem] lg:text-[10rem] font-serif font-light tracking-tighter leading-none">
+    <footer id="contacto" className="w-full pt-16 md:pt-24 flex flex-col gap-8 md:gap-14 border-t border-line mt-24 md:mt-32 scroll-mt-4">
+      <h2 className="text-[3.5rem] md:text-[8rem] lg:text-[10rem] font-serif font-light tracking-tighter leading-none">
         Hablemos.
       </h2>
 
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
         {/* Email: al pulsarlo se despliega la carta */}
-        <div className="group/email flex flex-col gap-2">
+        <div ref={emailRef} className="group/email flex flex-col gap-2">
           <span className="relative h-4 overflow-hidden">
-            <span className={`block transition-all duration-300 group-hover/email:opacity-0 group-hover/email:-translate-y-full ${labelClass}`}>
+            <span className={`block transition-all duration-300 group-hover/email:opacity-0 group-hover/email:-translate-y-full group-data-live/email:opacity-0 group-data-live/email:-translate-y-full group-data-live/email:delay-500 ${labelClass}`}>
               Email
             </span>
-            <span className={`absolute inset-0 italic whitespace-nowrap opacity-0 translate-y-full transition-all duration-300 group-hover/email:opacity-100 group-hover/email:translate-y-0 ${labelClass} text-ink`}>
+            <span className={`absolute inset-0 italic whitespace-nowrap opacity-0 translate-y-full transition-all duration-300 group-hover/email:opacity-100 group-hover/email:translate-y-0 group-data-live/email:opacity-100 group-data-live/email:translate-y-0 group-data-live/email:delay-500 ${labelClass} text-ink`}>
               ¡Púlsame, no muerdo!
             </span>
           </span>
@@ -288,12 +290,12 @@ const Footer = () => {
               type="button"
               onClick={() => (phase === 'open' ? closeLetter() : openLetter(false))}
               aria-expanded={showForm}
-              className="group relative py-1 text-xl md:text-3xl font-medium text-left break-all"
+              className="group relative py-1 text-lg md:text-3xl font-medium text-left break-all"
             >
               {EMAIL}
               <span
                 className={`absolute bottom-0 left-0 w-full h-[2px] bg-ink transition-transform duration-300 ease-in-out ${
-                  showForm ? 'scale-x-100 origin-left' : 'scale-x-0 origin-right group-hover:scale-x-100 group-hover:origin-left'
+                  showForm ? 'scale-x-100 origin-left' : 'scale-x-0 origin-right group-hover:scale-x-100 group-hover:origin-left group-data-live/email:scale-x-100 group-data-live/email:origin-left group-data-live/email:delay-700'
                 }`}
               />
             </button>
@@ -318,7 +320,7 @@ const Footer = () => {
             )}
           </div>
 
-          <div className="flex gap-6 text-lg md:text-xl font-medium">
+          <div className="flex gap-6 md:text-xl font-medium">
             <a href="https://www.instagram.com/gatell_/" target="_blank" rel="noopener noreferrer" className="hover:text-ink-soft transition-colors">
               Instagram
             </a>
@@ -330,7 +332,7 @@ const Footer = () => {
             Vivo en{' '}
             <button type="button" onClick={toggleMap} aria-expanded={showMap} className="relative group font-medium text-ink">
               Zaragoza
-              <span className="absolute -bottom-[2px] left-0 w-full h-px bg-ink scale-x-0 origin-right group-hover:scale-x-100 group-hover:origin-left transition-transform duration-300" />
+              <span className="absolute -bottom-[2px] left-0 w-full h-px bg-ink scale-x-0 origin-right [@media(hover:none)]:scale-x-100 group-hover:scale-x-100 group-hover:origin-left transition-transform duration-300" />
             </button>
             , España
           </p>
@@ -343,7 +345,7 @@ const Footer = () => {
         }`}
       >
         {/* padding para que la cinta y la sombra no se recorten */}
-        <div ref={letterRef} className={showForm ? `pt-6 px-6 pb-2 ${phase === 'reserving' ? 'letter-paused' : ''}` : 'overflow-hidden'}>
+        <div ref={letterRef} className={showForm ? `pt-6 px-2 md:px-6 pb-2 ${phase === 'reserving' ? 'letter-paused' : ''}` : 'overflow-hidden'}>
           {showForm && <ContactForm onClose={closeLetter} closing={phase === 'closing'} />}
         </div>
       </div>

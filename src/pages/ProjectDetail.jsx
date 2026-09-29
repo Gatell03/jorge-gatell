@@ -3,12 +3,13 @@ import { projects, getProject } from '../data/projects';
 import { ProjectImage, Tape } from '../components/ProjectCard';
 import NotFound from './NotFound';
 import { usePageTitle } from '../components/usePageTitle';
+import { useLiveOnScroll } from '../components/useLiveOnScroll';
 
 const LINK_LABELS = { github: 'Código en GitHub', demo: 'Ver demo' };
 
 const Section = ({ title, children }) => (
   <section className="flex flex-col gap-4">
-    <h2 className="text-3xl md:text-4xl font-serif font-light text-ink">{title}</h2>
+    <h2 className="text-2xl md:text-4xl font-serif font-light text-ink">{title}</h2>
     <p>{children}</p>
   </section>
 );
@@ -17,6 +18,8 @@ const ProjectDetail = () => {
   const { slug } = useParams();
   const project = getProject(slug);
   usePageTitle(project?.title ?? 'Página no encontrada');
+  // Está al final de la página: se enciende en cuanto asoma por abajo
+  const nextRef = useLiveOnScroll('0px 0px -12% 0px');
   if (!project) return <NotFound />;
 
   const next = projects[(projects.indexOf(project) + 1) % projects.length];
@@ -28,14 +31,14 @@ const ProjectDetail = () => {
         <Link to="/#trabajo" className="self-start text-sm text-ink-soft hover:text-ink transition-colors">
           ← Proyectos
         </Link>
-        <h1 className="text-6xl md:text-8xl font-serif font-light tracking-tight leading-[1]">{project.title}</h1>
-        <p className="text-xl md:text-3xl text-ink-soft font-serif font-light italic max-w-3xl">{project.subtitle}</p>
+        <h1 className="text-5xl md:text-8xl font-serif font-light tracking-tight leading-[1]">{project.title}</h1>
+        <p className="text-lg md:text-3xl text-ink-soft font-serif font-light italic max-w-3xl">{project.subtitle}</p>
         {project.highlights?.length > 0 && (
           <dl className="grid grid-cols-2 md:flex md:flex-wrap gap-x-12 gap-y-6 border-t border-line pt-6 mt-2">
             {project.highlights.map(({ value, label }) => (
               <div key={label} className="flex flex-col-reverse gap-1">
                 <dt className="text-xs uppercase tracking-[0.14em] text-ink-soft">{label}</dt>
-                <dd className="text-5xl md:text-6xl font-serif font-light leading-none tracking-tight">{value}</dd>
+                <dd className="text-4xl md:text-6xl font-serif font-light leading-none tracking-tight">{value}</dd>
               </div>
             ))}
           </dl>
@@ -89,11 +92,11 @@ const ProjectDetail = () => {
         </div>
       </div>
 
-      <Link to={`/project/${next.slug}`} className="group border-t border-ink pt-6 flex flex-col gap-2 md:items-end md:text-right">
+      <Link ref={nextRef} to={`/project/${next.slug}`} className="group border-t border-ink pt-6 flex flex-col gap-2 md:items-end md:text-right">
         <span className="text-xs uppercase tracking-[0.14em] text-ink-soft">Siguiente proyecto</span>
-        <span className="text-4xl md:text-6xl font-serif font-light tracking-tight">
-          <span className="group-hover:hand-underline">{next.title}</span>{' '}
-          <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
+        <span className="text-3xl md:text-6xl font-serif font-light tracking-tight">
+          <span className="group-hover:hand-underline group-data-live:hand-underline">{next.title}</span>{' '}
+          <span className="inline-block transition-transform group-hover:translate-x-1 group-data-live:translate-x-1">→</span>
         </span>
       </Link>
     </article>

@@ -3,9 +3,9 @@ import { Tape } from './ProjectCard';
 
 // Nota de papel "Lo que estoy aprendiendo" (Sobre mí), a juego con NowCard
 const LearningCard = ({ className = '' }) => (
-  <aside className={`photo-print p-7 pt-9 ${className}`}>
+  <aside className={`photo-print p-6 pt-8 md:p-7 md:pt-9 ${className}`}>
     <Tape className="rotate-2" />
-    <p className="font-serif italic text-xl mb-5">Lo que estoy aprendiendo</p>
+    <p className="font-serif italic text-lg md:text-xl mb-4 md:mb-5">Lo que estoy aprendiendo</p>
     <ul className="flex flex-col gap-4">
       {learning.map(({ topic, note }) => (
         <li key={topic} className="flex gap-3 border-t border-line pt-3">

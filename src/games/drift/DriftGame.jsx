@@ -24,7 +24,7 @@ const saveRecord = (key, value) => {
 // Botón con el rotulador amarillo al pasar el ratón (como "contacto")
 const ScribbleButton = ({ children, onClick, subtle = false }) => (
   <button type="button" onClick={onClick} className={`group relative inline-flex items-center gap-2 px-7 py-3 font-medium ${subtle ? 'text-ink-soft' : ''}`}>
-    <span className="absolute -inset-x-2 -inset-y-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity">
+    <span className="absolute -inset-x-2 -inset-y-1 opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity">
       <img src="/contact.webp" alt="" className="w-full h-full object-fill" />
     </span>
     <span className="relative">{children}</span>
@@ -133,7 +133,7 @@ const Stage = ({ full }) => {
       aria-label="Juego de derrapes en 3D"
       onKeyDown={() => !started && start('free')}
       className={`relative w-full overflow-hidden border-2 border-ink shadow-xl select-none outline-none ${
-        full ? 'h-screen border-0' : 'h-[min(76vh,680px)] min-h-[440px]'
+        full ? 'h-dvh border-0' : 'h-[min(76vh,680px)] min-h-[440px]'
       }`}
     >
       {/* HUD */}
