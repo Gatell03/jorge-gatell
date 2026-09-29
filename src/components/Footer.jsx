@@ -274,7 +274,7 @@ const Footer = () => {
         Hablemos.
       </h2>
 
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-10">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8 md:gap-10">
         {/* Email: al pulsarlo se despliega la carta */}
         <div ref={emailRef} className="group/email flex flex-col gap-2">
           <span className="relative h-4 overflow-hidden">
@@ -303,10 +303,10 @@ const Footer = () => {
           </div>
         </div>
 
-        {/* Redes y ubicación */}
-        <div className="relative flex flex-col md:items-end gap-6">
+        {/* Redes y ubicación: en móvil, una fila (redes a un lado, ciudad al otro) */}
+        <div className="relative w-full md:w-auto flex flex-row md:flex-col justify-between items-baseline md:items-end gap-4 md:gap-6">
           <div
-            className={`photo-print absolute bottom-full left-0 md:left-auto md:right-0 mb-6 w-[min(341px,calc(100vw-3rem))] aspect-[4/3] p-2 rotate-1 transition-all duration-500 origin-bottom ${
+            className={`photo-print absolute bottom-full right-0 mb-6 w-[min(341px,calc(100vw-3rem))] aspect-[4/3] p-2 rotate-1 transition-all duration-500 origin-bottom ${
               showMap ? 'opacity-100 scale-100' : 'opacity-0 scale-95 translate-y-4 pointer-events-none'
             }`}
           >
@@ -320,7 +320,7 @@ const Footer = () => {
             )}
           </div>
 
-          <div className="flex gap-6 md:text-xl font-medium">
+          <div className="flex gap-5 md:gap-6 md:text-xl font-medium">
             <a href="https://www.instagram.com/gatell_/" target="_blank" rel="noopener noreferrer" className="hover:text-ink-soft transition-colors">
               Instagram
             </a>
@@ -328,7 +328,7 @@ const Footer = () => {
               LinkedIn
             </a>
           </div>
-          <p className="text-ink-soft">
+          <p className="text-sm md:text-base text-ink-soft">
             Vivo en{' '}
             <button type="button" onClick={toggleMap} aria-expanded={showMap} className="relative group font-medium text-ink">
               Zaragoza
@@ -350,13 +350,13 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row justify-between gap-3 border-t border-line py-6 text-sm text-ink-soft">
+      <div className="grid grid-cols-2 md:flex md:flex-row justify-between gap-x-4 gap-y-2 border-t border-line py-5 md:py-6 text-xs md:text-sm text-ink-soft">
         <span>© {new Date().getFullYear()} Jorge Gatell</span>
-        <span className="font-serif italic">Hecho a mano en Zaragoza</span>
+        <span className="col-span-2 order-last md:order-none font-serif italic text-center md:text-left">Hecho a mano en Zaragoza</span>
         <button
           type="button"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="text-left md:text-right hover:text-ink transition-colors"
+          className="text-right hover:text-ink transition-colors"
         >
           Volver arriba ↑
         </button>

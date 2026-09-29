@@ -184,6 +184,34 @@ h1, h2, h3, h4, .font-serif {
 .animate-postit { animation: postit-in 0.55s cubic-bezier(0.25, 0.9, 0.3, 1) both; }
 .animate-postit-out { animation: postit-out 0.38s cubic-bezier(0.5, 0, 0.75, 0) both; }
 
+/* Bloques que aparecen al hacer scroll (Reveal.jsx) */
+.reveal {
+  opacity: 0;
+  translate: 0 18px;
+  transition: opacity 0.7s ease-out, translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+.reveal.is-in {
+  opacity: 1;
+  translate: none;
+}
+/* Rotulador que se dibuja de izquierda a derecha cuando su bloque aparece */
+.mark-draw {
+  background: linear-gradient(transparent 60%, var(--color-accent-soft) 60%, var(--color-accent-soft) 92%, transparent 92%) no-repeat 0 0 / 0% 100%;
+  transition: background-size 0.9s cubic-bezier(0.6, 0, 0.3, 1) calc(var(--reveal-delay, 0s) + 0.45s);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.is-in .mark-draw { background-size: 100% 100%; }
+/* Sello de la tarjeta de embarque */
+@keyframes stamp {
+  0% { opacity: 0; transform: scale(2.2) rotate(-4deg); }
+  70% { opacity: 1; transform: scale(0.94) rotate(-13deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-12deg); }
+}
+.stamp { opacity: 0; }
+.is-in .stamp { animation: stamp 0.45s cubic-bezier(0.3, 1.3, 0.5, 1) calc(var(--reveal-delay, 0s) + 0.8s) both; }
+
 /* Transición entre páginas: sin fill "forwards" para no dejar un transform que rompa los position: fixed */
 @keyframes page-in {
   from { opacity: 0; transform: translateY(10px); }

@@ -44,7 +44,7 @@ const Home = () => {
   return (
     <div className="page flex flex-col gap-28 md:gap-40 pt-10 md:pt-20">
       {/* Hero */}
-      <header className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-14 lg:gap-24 items-center">
+      <header className="grid grid-cols-1 lg:grid-cols-[1fr_22rem] gap-12 lg:gap-24 items-center">
         <div>
           <p className="text-sm uppercase tracking-[0.18em] text-ink-soft mb-6">Ingeniería Informática · Zaragoza</p>
           <h1 className="text-5xl md:text-8xl xl:text-9xl font-serif font-light tracking-tight leading-[0.95]">
@@ -55,7 +55,7 @@ const Home = () => {
             guía una filosofía: <span className="whitespace-nowrap"><Experience />.</span>
           </p>
         </div>
-        <NowCard className="rotate-[1.2deg] max-w-sm lg:max-w-none" />
+        <NowCard className="rotate-[1.2deg] justify-self-end w-[86%] max-w-sm lg:w-auto lg:max-w-none lg:justify-self-auto" />
       </header>
 
       {/* Proyectos */}
@@ -65,18 +65,25 @@ const Home = () => {
       </section>
 
       {/* Trayectoria */}
-      <section className="flex flex-col gap-6">
+      <section className="flex flex-col gap-8 md:gap-6">
         <SectionHeading title="Trayectoria" />
-        <ol>
+        {/* Móvil: línea de tiempo con fecha arriba; escritorio: filas en tres columnas */}
+        <ol className="relative mt-2 md:mt-0 border-l border-line md:border-l-0 ml-1 md:ml-0">
           {experience.map((item) => (
             <li
               key={item.role}
-              className="grid md:grid-cols-[1.3fr_1fr_12rem] gap-1 md:gap-10 md:items-baseline py-6 md:py-7 border-b border-line"
+              className="relative grid md:grid-cols-[1.3fr_1fr_12rem] gap-1.5 md:gap-10 md:items-baseline pl-6 md:pl-0 pb-9 last:pb-1 md:py-7 md:last:pb-7 md:border-b md:border-line"
             >
-              <span className="text-xl md:text-3xl font-serif font-light leading-snug">{item.role}</span>
-              <span className="text-ink-soft md:text-lg">{item.company}</span>
-              <span className="text-sm text-ink-soft md:text-right flex items-center gap-2 md:justify-end whitespace-nowrap tabular-nums">
-                {isCurrent(item.date) && <span className="w-2 h-2 rounded-full bg-accent ring-1 ring-ink/40" aria-hidden="true" />}
+              <span
+                aria-hidden="true"
+                className={`md:hidden absolute -left-[5px] top-1 w-[9px] h-[9px] rounded-full ring-1 ring-ink/40 ${
+                  isCurrent(item.date) ? 'bg-accent' : 'bg-paper'
+                }`}
+              />
+              <span className="text-lg md:text-3xl font-serif font-light leading-snug">{item.role}</span>
+              <span className="text-sm text-ink-soft md:text-lg">{item.company}</span>
+              <span className="order-first md:order-none text-xs md:text-sm uppercase md:normal-case tracking-[0.14em] md:tracking-normal text-ink-soft md:text-right flex items-center gap-2 md:justify-end whitespace-nowrap tabular-nums">
+                {isCurrent(item.date) && <span className="hidden md:inline-block w-2 h-2 rounded-full bg-accent ring-1 ring-ink/40" aria-hidden="true" />}
                 {item.date}
               </span>
             </li>
